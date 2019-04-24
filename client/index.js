@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import {Provider, connect} from 'react-redux'
 import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom'
-import store from './store'
+import store, { sessionLogin } from './store'
 import Login from './login'
 import UserPage from './user-page'
 
@@ -10,6 +10,10 @@ import UserPage from './user-page'
 
 class _Main extends Component {
   componentDidMount () {
+    this.props.sessionLogin();
+  }
+  componentDidUpdate(){
+    this.props.sessionLogin();
   }
 
   render () {
@@ -30,13 +34,17 @@ class _Main extends Component {
   }
 };
 
-const mapStateToProps = ({ user})=> {
+const mapDispatchToProps = dispatch => ({
+  sessionLogin: () => dispatch(sessionLogin())
+});
+
+const mapStateToProps = ({ user })=> {
   return {
     isLoggedIn: !!user.id
   };
 };
 
-const Main = connect(mapStateToProps)(_Main);
+const Main = connect(mapStateToProps, mapDispatchToProps)(_Main);
 
 ReactDOM.render(
   <Provider store={store}>
